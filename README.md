@@ -3,7 +3,7 @@
 An interactive Mapbox visualization of Bluebikes station traffic and bike lanes
 in Boston and Cambridge. The time slider filters March 2024 trips to starts and
 ends within 60 minutes of the selected time. Station circles are sized by total
-traffic and colored by the balance of departures and arrivals.
+traffic and colored from blue (lower traffic) to red (higher traffic).
 
 ## Run locally
 

@@ -30,6 +30,7 @@ const lineStyle = {
 let map;
 let stations = [];
 let radiusScale;
+let trafficColorScale;
 let circles;
 let loadedLayers = new Set();
 let dataReady = false;
@@ -109,15 +110,12 @@ function updatePositions() {
     .attr('cy', (station) => getCoords(station).cy);
 }
 
-function stationFlowRatio(station) {
-  return station.totalTraffic === 0 ? 0.5 : station.departures / station.totalTraffic;
-}
-
 function updateScatterPlot(timeFilter) {
   const filteredStations = computeStationTraffic(timeFilter);
   const maximumTraffic = d3.max(filteredStations, (station) => station.totalTraffic) ?? 0;
   radiusScale.domain([0, maximumTraffic || 1]);
   radiusScale.range(timeFilter === -1 ? [0, 25] : [2, 48]);
+  trafficColorScale.domain([0, maximumTraffic || 1]);
 
   circles = svg
     .selectAll('circle')
@@ -132,7 +130,7 @@ function updateScatterPlot(timeFilter) {
       (exit) => exit.remove(),
     )
     .attr('r', (station) => radiusScale(station.totalTraffic))
-    .style('--departure-ratio', (station) => stationFlowRatio(station))
+    .style('fill', (station) => trafficColorScale(station.totalTraffic))
     .each(function (station) {
       d3.select(this)
         .select('title')
@@ -203,6 +201,7 @@ async function loadData() {
     stations = stationData.data.stations;
     addToTimeBuckets(trips);
     radiusScale = d3.scaleSqrt().range([0, 25]);
+    trafficColorScale = d3.scaleLinear().range(['#3182f6', '#e34b43']).clamp(true);
     dataReady = true;
     updateTimeDisplay();
     setStatus(

@@ -79,19 +79,12 @@
         </div>
 
         <div class="map-footer">
-          <div class="legend" aria-label="Circle color legend">
-            <span class="legend-title">Station flow</span>
-            <span class="legend-item">
-              <i class="legend-swatch" style="--departure-ratio: 1"></i>
-              More departures
-            </span>
-            <span class="legend-item">
-              <i class="legend-swatch" style="--departure-ratio: 0.5"></i>
-              Balanced
-            </span>
-            <span class="legend-item">
-              <i class="legend-swatch" style="--departure-ratio: 0"></i>
-              More arrivals
+          <div class="legend" aria-label="Circle color shows station traffic volume">
+            <span class="legend-title">Station traffic</span>
+            <span class="traffic-legend">
+              <span class="traffic-legend-label">Low</span>
+              <i class="traffic-gradient" aria-hidden="true"></i>
+              <span class="traffic-legend-label">High</span>
             </span>
           </div>
           <p class="map-hint">Circle size shows total trips · Hover a station for details</p>
