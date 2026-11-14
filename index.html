@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore Bluebikes traffic and bike lanes across Boston and Cambridge."
+    />
+    <title>Bike Traffic | Boston + Cambridge</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" />
+    <link rel="stylesheet" href="global.css" />
+    <script type="module" src="map.js"></script>
+  </head>
+  <body>
+    <header class="page-header">
+      <div class="title-block">
+        <p class="eyebrow">BOSTON + CAMBRIDGE · MARCH 2024</p>
+        <h1>Bike traffic, at a glance<span class="title-period">.</span></h1>
+        <p class="intro">
+          Explore Bluebikes station traffic alongside the region’s bike network.
+          Pan, zoom, and filter by time to see how movement changes through the day.
+        </p>
+      </div>
+
+      <div class="time-control">
+        <label for="time-slider">
+          <span class="control-heading">Trips around</span>
+          <time id="selected-time" aria-live="polite"></time>
+          <em id="any-time">(any time)</em>
+        </label>
+        <input
+          id="time-slider"
+          type="range"
+          min="-1"
+          max="1439"
+          step="1"
+          value="-1"
+          aria-label="Filter trips by time of day"
+        />
+        <div class="slider-endpoints" aria-hidden="true">
+          <span>All day</span>
+          <span>12:00 AM</span>
+          <span>11:59 PM</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="map-section" aria-label="Interactive bike traffic map">
+        <div class="map-toolbar">
+          <p><span class="live-dot"></span> Bluebikes station activity</p>
+          <fieldset class="layer-toggles" aria-label="Bike lane map layers">
+            <label>
+              <input id="boston-lanes-toggle" type="checkbox" checked disabled />
+              Boston lanes
+            </label>
+            <label>
+              <input id="cambridge-lanes-toggle" type="checkbox" checked disabled />
+              Cambridge lanes
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="map-frame">
+          <div
+            id="map"
+            role="region"
+            aria-label="Map of Boston and Cambridge showing bike lanes and Bluebikes station traffic"
+          ></div>
+          <svg class="station-overlay" aria-hidden="true"></svg>
+          <div id="map-status" class="map-status" role="status" aria-live="polite">
+            Add your Mapbox public token in <code>map-config.js</code> to load the map.
+          </div>
+          <aside class="map-attribution" aria-label="Map data attribution">
+            Map data © Mapbox · Bike lane data: City of Boston and City of Cambridge
+          </aside>
+        </div>
+
+        <div class="map-footer">
+          <div class="legend" aria-label="Circle color legend">
+            <span class="legend-title">Station flow</span>
+            <span class="legend-item">
+              <i class="legend-swatch" style="--departure-ratio: 1"></i>
+              More departures
+            </span>
+            <span class="legend-item">
+              <i class="legend-swatch" style="--departure-ratio: 0.5"></i>
+              Balanced
+            </span>
+            <span class="legend-item">
+              <i class="legend-swatch" style="--departure-ratio: 0"></i>
+              More arrivals
+            </span>
+          </div>
+          <p class="map-hint">Circle size shows total trips · Hover a station for details</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <p>Bluebikes trip data · March 2024</p>
+      <p>Built to explore how bike traffic connects Boston and Cambridge.</p>
+    </footer>
+  </body>
+</html>
