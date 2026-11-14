@@ -70,6 +70,11 @@
             aria-label="Map of Boston and Cambridge showing bike lanes and Bluebikes station traffic"
           ></div>
           <svg class="station-overlay" aria-hidden="true"></svg>
+          <div id="station-tooltip" class="station-tooltip" role="tooltip" hidden>
+            <strong class="tooltip-name"></strong>
+            <span class="tooltip-total"></span>
+            <span class="tooltip-breakdown"></span>
+          </div>
           <div id="map-status" class="map-status" role="status" aria-live="polite">
             Add your Mapbox public token in <code>map-config.js</code> to load the map.
           </div>

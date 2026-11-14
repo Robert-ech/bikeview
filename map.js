@@ -17,6 +17,8 @@ const selectedTime = document.querySelector('#selected-time');
 const anyTimeLabel = document.querySelector('#any-time');
 const bostonToggle = document.querySelector('#boston-lanes-toggle');
 const cambridgeToggle = document.querySelector('#cambridge-lanes-toggle');
+const mapFrame = document.querySelector('.map-frame');
+const stationTooltip = document.querySelector('#station-tooltip');
 const svg = d3.select('.station-overlay');
 const minutesPerDay = 24 * 60;
 const departuresByMinute = Array.from({ length: minutesPerDay }, () => []);
@@ -110,6 +112,36 @@ function updatePositions() {
     .attr('cy', (station) => getCoords(station).cy);
 }
 
+function showStationTooltip(station, x, y) {
+  stationTooltip.querySelector('.tooltip-name').textContent = station.name;
+  stationTooltip.querySelector('.tooltip-total').textContent =
+    `${station.totalTraffic.toLocaleString()} total trips`;
+  stationTooltip.querySelector('.tooltip-breakdown').textContent =
+    `${station.departures.toLocaleString()} departures · ` +
+    `${station.arrivals.toLocaleString()} arrivals`;
+  stationTooltip.hidden = false;
+
+  const left = Math.max(
+    8,
+    Math.min(x + 14, mapFrame.clientWidth - stationTooltip.offsetWidth - 8),
+  );
+  const top = Math.max(
+    8,
+    Math.min(y + 14, mapFrame.clientHeight - stationTooltip.offsetHeight - 8),
+  );
+  stationTooltip.style.left = `${left}px`;
+  stationTooltip.style.top = `${top}px`;
+}
+
+function showStationTooltipAtPointer(event, station) {
+  const frameBounds = mapFrame.getBoundingClientRect();
+  showStationTooltip(
+    station,
+    event.clientX - frameBounds.left,
+    event.clientY - frameBounds.top,
+  );
+}
+
 function updateScatterPlot(timeFilter) {
   const filteredStations = computeStationTraffic(timeFilter);
   const maximumTraffic = d3.max(filteredStations, (station) => station.totalTraffic) ?? 0;
@@ -131,6 +163,11 @@ function updateScatterPlot(timeFilter) {
     )
     .attr('r', (station) => radiusScale(station.totalTraffic))
     .style('fill', (station) => trafficColorScale(station.totalTraffic))
+    .on('pointerenter', showStationTooltipAtPointer)
+    .on('pointermove', showStationTooltipAtPointer)
+    .on('pointerleave', () => {
+      stationTooltip.hidden = true;
+    })
     .each(function (station) {
       d3.select(this)
         .select('title')
