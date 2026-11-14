@@ -23,8 +23,22 @@ jobs:
     steps:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      - name: Configure public Mapbox token
+        env:
+          MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+        run: |
+          node --input-type=module -e '
+            import { writeFileSync } from "node:fs";
+            const token = process.env.MAPBOX_ACCESS_TOKEN;
+            if (!token?.startsWith("pk.")) {
+              console.error("Set the MAPBOX_ACCESS_TOKEN repository secret to a Mapbox public token.");
+              process.exit(1);
+            }
+            writeFileSync(
+              "map-config.js",
+              `export const MAPBOX_ACCESS_TOKEN = ${JSON.stringify(token)};\n`,
+            );
+          '
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
